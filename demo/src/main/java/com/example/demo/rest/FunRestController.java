@@ -13,4 +13,14 @@ public class FunRestController {
         return "Hello World!";
     }
 
+    @GetMapping("/workout")
+    public String getDailyWorkout(){
+        return "Abs and cardio and 10miles";
+    }
+
+    @GetMapping("/diet")
+    public String getDailyDiet(){
+        return "1500 calories to lose 2 lb a week";
+    }
+
 }
