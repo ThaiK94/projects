@@ -2,6 +2,12 @@ package com.example.demo_1;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+/*
+@SpringBootApplication(
+		scanBasePackages = {"com.example.demo_1",
+		"com.example.util"
+		})
+ */
 
 @SpringBootApplication
 public class Demo1Application {
