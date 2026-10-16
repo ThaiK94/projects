@@ -4,18 +4,25 @@ import com.example.demo.dao.EmployeeDAO;
 import com.example.demo.entity.Employee;
 import com.example.demo.service.EmployeeService;
 import org.springframework.web.bind.annotation.*;
+import tools.jackson.databind.json.JsonMapper;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
 public class EmployeeRestController {
 
     private EmployeeService employeeService;
+    private JsonMapper jsonMapper;
 
-    public EmployeeRestController(EmployeeService theEmployeeService){
+
+
+    public EmployeeRestController(EmployeeService theEmployeeService, JsonMapper theJsonMapper){
+        jsonMapper = theJsonMapper;
         employeeService = theEmployeeService;
     }
+
     @GetMapping("/employees")
     public List<Employee> findAll(){
         return employeeService.findAll();
@@ -43,5 +50,17 @@ public class EmployeeRestController {
         return dbEmployee;
     }
 
-
+    @PatchMapping("/employees/{employeeId}")
+    public Employee patchEmployee(@PathVariable int employeeId, @RequestBody Map<String, Object> patchPayload){
+        Employee tempEmployee = employeeService.findById(employeeId);
+        if(tempEmployee == null ){
+            throw new RuntimeException("Employee id not found - " + employeeId);
+        }
+        if(patchPayload.containsKey("id")){
+            throw new RuntimeException("Employee id not allowed in request body - " +employeeId);
+        }
+        Employee patchedEmployee = jsonMapper.updateValue(tempEmployee, patchPayload);
+        Employee dbEmployee = employeeService.save(patchedEmployee);
+        return dbEmployee;
+    }
 }
